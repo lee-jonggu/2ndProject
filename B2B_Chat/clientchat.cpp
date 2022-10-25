@@ -84,10 +84,11 @@ void ClientChat::receiveData()
     QByteArray bytearray = clientConnection->read(BLOCK_SIZE);
 
     chatProtocolType data;                                          // 프로토콜타입 유형
+    memset(data.data,0,1020);
     QDataStream in(&bytearray, QIODevice::ReadOnly);
     in >> data.type;
     in.readRawData(data.data, 1020);
-    qDebug() << data.data;
+    qDebug() << "1" << data.data;
 
     switch(data.type){
     case Chat_Talk:
@@ -104,6 +105,7 @@ void ClientChat::receiveData()
         ui->chatOutPushButton->setDisabled(true);
         ui->chatPushButton->setDisabled(false);
         ui->disConnectPushButton->setDisabled(false);
+        ui->treeWidget->clear();
         break;
     case Chat_Admisson:
         QMessageBox::critical(this, tr("Chatting Client"), \
@@ -117,9 +119,20 @@ void ClientChat::receiveData()
         ui->clientNameLineEdit->setReadOnly(true);
         break;
     case Send_Client:
-        QTreeWidgetItem *item = new QTreeWidgetItem;
-        item->setText(0,data.data);
-        ui->treeWidget->addTopLevelItem(item);
+//        QTreeWidgetItem *item = new QTreeWidgetItem;
+//        item->setText(0,data.data);
+//        ui->treeWidget->addTopLevelItem(item);
+//        if(ui->treeWidget->topLevelItemCount() > 1)
+//            ui->treeWidget->takeTopLevelItem(0);
+        ui->treeWidget->clear();
+        QString str = data.data;
+        for(int i=0;i<str.split("/").size();i++)
+        {
+            QTreeWidgetItem *item = new QTreeWidgetItem;
+            item->setText(0,str.split("/")[i]);
+            ui->treeWidget->addTopLevelItem(item);
+        }
+        ui->treeWidget->takeTopLevelItem(ui->treeWidget->findItems("",Qt::MatchContains).count()-1);
         break;
     }
 }
@@ -180,7 +193,6 @@ void ClientChat::sendProtocol(Chat_Status type, char* data, int size)
 void ClientChat::on_chatPushButton_clicked()
 {
     sendProtocol(Chat_In, ui->clientIdLineEdit->text().toStdString().data());
-//    qDebug() << ui->clientIdLineEdit->text().toStdString().data();
     ui->inputLine->setDisabled(false);
     ui->chatPushButton->setDisabled(true);
     ui->chatOutPushButton->setDisabled(false);
@@ -197,6 +209,7 @@ void ClientChat::on_chatOutPushButton_clicked()
     ui->chatOutPushButton->setDisabled(true);
     ui->chatPushButton->setDisabled(false);
     ui->disConnectPushButton->setDisabled(false);
+    ui->treeWidget->clear();
 }
 
 void ClientChat::on_disConnectPushButton_clicked()
@@ -209,6 +222,7 @@ void ClientChat::on_disConnectPushButton_clicked()
     ui->clientNameLineEdit->setReadOnly(false);
     ui->ipAddressLineEdit->setReadOnly(false);
     ui->portLineEdit->setReadOnly(false);
+    ui->treeWidget->clear();
 }
 
 void ClientChat::on_fileTransferPushButton_clicked()

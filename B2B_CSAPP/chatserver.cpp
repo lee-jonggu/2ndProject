@@ -159,6 +159,7 @@ void ChatServer::receiveData()
             enterItem->setText(1,clientName);
             ui->enteredTreeWidget->addTopLevelItem(enterItem);
             clientNameHash[port] = name;
+            chatInClientList.append(clientConnection);
 //            chatInClient.append(name);
 
             QTreeWidgetItem *items = new QTreeWidgetItem;
@@ -189,6 +190,10 @@ void ChatServer::receiveData()
                 sendArray.append(clientNameHash[port].toStdString().data());
                 sendArray.append(" : ");
                 sendArray.append(id.toStdString().data());
+////                sendArray.append(id.toStdString());
+//                outByteArray.clear();
+//                outByteArray.append(id.toStdString().data());
+//                out.writeRawData(outByteArray, 1020);
                 sock->write(sendArray);
             }
         }
@@ -210,10 +215,22 @@ void ChatServer::receiveData()
     }
         break;
     case Chat_Out:
+        qDebug() << chatInClientList;
         foreach(auto item, ui->enteredTreeWidget->findItems(id, Qt::MatchFixedString, 0))
         {
             ui->enteredTreeWidget->takeTopLevelItem(ui->enteredTreeWidget->indexOfTopLevelItem(item));
             clientNameHash.remove(port);
+
+            if(!chatInClientList.isEmpty()){
+                QList<QTcpSocket*>::Iterator eraseSock;
+                for(auto sock = chatInClientList.begin(); chatInClientList.end() != sock; sock++){
+                    if(*sock == clientConnection){
+                        eraseSock = sock;
+                    }
+                }
+                chatInClientList.erase(eraseSock);
+            }
+            qDebug() << chatInClientList;
 
             QTreeWidgetItem *items = new QTreeWidgetItem;
             items->setText(0,ip);
@@ -232,6 +249,7 @@ void ChatServer::receiveData()
             ui->logTreeWidget->addTopLevelItem(items);
             logThread->appendData(item);
         }
+        sendClientList();
         break;
 
     case Server_Out:
@@ -252,7 +270,9 @@ void ChatServer::receiveData()
             items->setText(5,QDateTime::currentDateTime().toString());
             ui->logTreeWidget->addTopLevelItem(items);
             logThread->appendData(item);
+
         }
+        sendClientList();
         break;
     }
 
@@ -311,6 +331,7 @@ void ChatServer::clientExpulsion()                          // 클라이언트 �
 
 
     clientNameHash.remove(port); // 채팅 서버 접속 리스트에서 삭제
+    sendClientList();
 //    chatInClient.remove(name);
 }
 
@@ -360,7 +381,8 @@ void ChatServer::clientAdmission()                          // 클라이언트 �
     logThread->appendData(items);
 
     clientNameHash[port] = name; // 채팅 서버 접속 리스트에 추가
-//    chatInClient.append(name);
+    chatInClientList.append(sock);
+    sendClientList();
 }
 
 void ChatServer::acceptConnection()
@@ -462,54 +484,46 @@ void ChatServer::removeClient()
 
 void ChatServer::sendClientList()
 {
-    foreach(int id, clientIdHash) {
-        chatInClientList = ui->enteredTreeWidget->findItems(QString::number(id),Qt::MatchContains,0);
-        //    chatInClientList.append(QString::number(chatInClientList.size()).toUtf8() + "/");
-        foreach(QTreeWidgetItem* item, chatInClientList) {
-            outByteArray.append(item->text(1).toUtf8() + "/");
+#if 0
+    foreach(QTcpSocket *sock, clientList) { // 서버가 아니라 채팅창에 접속한 애들의 소켓으로만 한정 지어야한다
+        outByteArray.clear();
+        foreach(auto item, ui->enteredTreeWidget->findItems("",Qt::MatchContains)) { // 채팅에 접속한 전체 리스트
+            QString name = item->text(1);
+            if(ui->enteredTreeWidget->findItems(name,Qt::MatchContains).count())// 이름만 추출
+                enterClientList.append(name + "/");                                           // 리스트에 저장
+            //            QByteArray outByteArray;
+            outByteArray.append(name.toUtf8() + "/");
         }
-        qDebug() << "outByteArray" << outByteArray.toStdString().data();
-        foreach(QTcpSocket *sock, clientList) {
-//            if(clientNameHash.contains(sock->peerPort())) {
-//                qDebug() << "접속 클라이언트 "<<clientNameHash;
-                QByteArray sendArray;
-                QDataStream out(&sendArray, QIODevice::WriteOnly);
-                out.device()->seek(0);
-                out << Send_Client;
-                qDebug() << "outByteArray" << outByteArray.toStdString().data();
-                out.writeRawData(outByteArray, 1020);
-                sock->write(sendArray);
-//            }
-            sock->flush();
-            while(sock->waitForBytesWritten());
+        QByteArray sendArray;
+        QDataStream out(&sendArray, QIODevice::WriteOnly);
+        out.device()->seek(0);
+        out << Send_Client;
+        out.writeRawData(outByteArray, 1020);
+        sock->write(sendArray);
+        sock->flush();
+        while(sock->waitForBytesWritten());
     }
-}
-
-//void ChatServer::sendProtocol(Chat_Status type, char* data, int size)
-//{
-//    //    QByteArray sendArray;           // 소켓으로 보낼 데이터를 채우고
-//    //    QDataStream out(&sendArray, QIODevice::WriteOnly);
-//    //    out.device()->seek(0);
-//    //    out << type;
-//    //    out.writeRawData(data, size);
-//    //    foreach(QTcpSocket *sock, clientList) {
-//    //        if(clientNameHash.contains(sock->peerPort())) {
-//    //            sock->write(sendArray);     // 서버로 전송
-//    //        }
-//    //        sock->flush();
-//    //        while(sock->waitForBytesWritten());
-//    //    }
-//    //    QByteArray sendArray;           // 소켓으로 보낼 데이터를 채우고
-//    //    QDataStream out(&sendArray, QIODevice::WriteOnly);
-//    //    out.device()->seek(0);
-//    //    out << type;
-//    //    out.writeRawData(data, size);
-//    //    clientSocket->write(sendArray);     // 서버로 전송
-//    //    clientSocket->flush();
-//    //    while(clientSocket->waitForBytesWritten());
-//}
-
-
+#else
+//    foreach(QTcpSocket *sock, clientList) { // 서버가 아니라 채팅창에 접속한 애들의 소켓으로만 한정 지어야한다
+    foreach(QTcpSocket *sock, chatInClientList) {
+        outByteArray.clear();
+        foreach(auto item, ui->enteredTreeWidget->findItems("",Qt::MatchContains)) { // 채팅에 접속한 전체 리스트
+            QString name = item->text(1);
+            if(ui->enteredTreeWidget->findItems(name,Qt::MatchContains).count())// 이름만 추출
+                enterClientList.append(name + "/");                                           // 리스트에 저장
+            //            QByteArray outByteArray;
+            outByteArray.append(name.toUtf8() + "/");
+        }
+        QByteArray sendArray;
+        QDataStream out(&sendArray, QIODevice::WriteOnly);
+        out.device()->seek(0);
+        out << Send_Client;
+        out.writeRawData(outByteArray, 1020);
+        sock->write(sendArray);
+        sock->flush();
+        while(sock->waitForBytesWritten());
+    }
+#endif
 }
 
 

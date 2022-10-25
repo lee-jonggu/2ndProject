@@ -19,25 +19,23 @@ OrderManager::OrderManager(QWidget *parent) :
 
 OrderManager::~OrderManager()
 {
-    delete ui;
 
     QFile file("orderlist.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
 
     QTextStream out(&file);
-    for (const auto& v : saveOrderList) {
-        QTreeWidget* i = v;
-//        out << i->statusTip(0) << ", " ;
-//        out << i->statusTip(1) << ", ";
-//        out << i->statusTip(2) << ", ";
-//        out << i->statusTip(3) << ", ";
-//        out << i->statusTip(4) << ", ";
-//        out << i->statusTip(5) << "\n";
-
+    foreach (auto v , ui->orderTreeWidget->findItems("",Qt::MatchContains)) {
+        QTreeWidgetItem* item = v;
+        qDebug() << item->text(0);
+        out << item->text(0) << ", " << item->text(1) << ", ";
+        out << item->text(2) << ", " << item->text(3) << ", ";
+        out << item->text(4) << ", " << item->text(5) << "\n";
     }
 
     file.close( );
+
+    delete ui;
 }
 
 void OrderManager::loadData()
@@ -51,12 +49,19 @@ void OrderManager::loadData()
         QString line = in.readLine();
         QList<QString> row = line.split(", ");
         if(row.size()) {
+            QTreeWidgetItem *item = new QTreeWidgetItem;
+            item->setText(0,row[0]);
+            item->setText(1,row[1]);
+            item->setText(2,row[2]);
+            item->setText(3,row[3]);
+            item->setText(4,row[4]);
+            item->setText(5,row[5]);
+            ui->orderTreeWidget->addTopLevelItem(item);
             int id = row[0].toInt();
             int c_id = row[1].toInt();
             int i_id = row[2].toInt();
             int count = row[3].toInt();
             Order* o = new Order(id, c_id, i_id, count);
-            ui->orderTreeWidget->addTopLevelItem(o);
             orderList.insert(id, o);
 
         }
@@ -223,7 +228,6 @@ void OrderManager::on_orderPushButton_clicked()
 //    QTreeWidgetItem* item = new QTreeWidgetItem(ui->orderTreeWidget);
     QTreeWidget* item = new QTreeWidget(ui->orderTreeWidget);
     saveOrderList.insert(orderNum,item);
-    qDebug() << saveOrderList[orderNum]->takeTopLevelItem(0)->text(0);
 
     ui->orderClientIdlineEdit->clear();
     ui->orderItemIdlineEdit->clear();
@@ -277,6 +281,14 @@ void OrderManager::on_SearchPushButton_clicked()
             int orderNum = o->orderNum();
             ui->searchTreeWidget->addTopLevelItem(orderList[orderNum]);
         }
+    }
+
+    foreach (auto v , ui->orderTreeWidget->findItems("",Qt::MatchContains)) {
+        QTreeWidgetItem* item = v;
+        qDebug() << item->text(0);
+//        out << item->text(0) << ", " << item->text(1) << ", ";
+//        out << item->text(2) << ", " << item->text(3) << ", ";
+//        out << item->text(4) << ", " << item->text(5) << "\n";
     }
 
 }

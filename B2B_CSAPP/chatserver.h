@@ -74,13 +74,13 @@ private:
     QTcpServer *tcpServer;
     QTcpServer *fileServer;
     QList<QTcpSocket*> clientList;
-
+    QList<QTcpSocket*> chatInClientList;
     QList<QString> enterClientList;
 
     QString clientId;  // 서버에 아이디가 저장되어 있는지 확인
     QString clientName;
 
-    QList<QTreeWidgetItem*> chatInClientList;                    // 채팅창에 참여한 클라이언트
+//    QList<QTreeWidgetItem*> chatInClientList;                    // 채팅창에 참여한 클라이언트
     QHash<int, QString> clientNameHash;             // port, name
 //    QHash<QString, int> clientIdHash;
     QHash<QTcpSocket*, int> clientIdHash;           // socket, id
