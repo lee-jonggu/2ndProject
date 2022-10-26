@@ -10,6 +10,7 @@
 
 class QProgressDialog;
 class QFile;
+class ServerChat;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ClientChat; }
@@ -23,7 +24,9 @@ typedef enum {
     Server_Out,
     Chat_Expulsion,
     Chat_Admisson,
-    Send_Client
+    Send_Client,
+    Manager_Chat,        // 서버 채팅 전송 프로토콜
+    Chat_One
 } Chat_Status;
 
 typedef struct {
@@ -62,6 +65,8 @@ private slots:
     void on_chatOutPushButton_clicked();
 
     void on_fileTransferPushButton_clicked();
+
+    void on_serverPushButton_clicked();
 
 private:
     Ui::ClientChat *ui;

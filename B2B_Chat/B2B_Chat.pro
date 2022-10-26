@@ -10,13 +10,16 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    clientchat.cpp
+    clientchat.cpp \
+    serverchat.cpp
 
 HEADERS += \
-    clientchat.h
+    clientchat.h \
+    serverchat.h
 
 FORMS += \
-    clientchat.ui
+    clientchat.ui \
+    serverchat.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

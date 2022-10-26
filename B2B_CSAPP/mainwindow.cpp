@@ -6,6 +6,7 @@
 #include "ordermanager.h"
 #include "chatserver.h"
 #include "chatwindow.h"
+#include "serverclientchat.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -26,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     chatManager = new ChatServer(this);
     ui->tabWidget->addTab(chatManager,"&Chat Server");
+
+//    serverClientChat = new ServerClientChat(this);
 
     connect(clientManager,SIGNAL(clientAdded(int,QString)),chatManager,SLOT(showIdName(int,QString)));
     connect(clientManager,SIGNAL(clientRemove(int,int)),chatManager,SLOT(removeIdName(int,int)));
@@ -53,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(clientManager,SIGNAL(clientNameDataSent(Client*,QTreeWidgetItem*)),orderManager,SLOT(showClientNameData(Client*,QTreeWidgetItem*)));
     connect(orderManager,SIGNAL(itemNameDataSent(int,QTreeWidgetItem*)),itemManager,SLOT(itemIdNameListData(int,QTreeWidgetItem*)));
     connect(itemManager,SIGNAL(itemNameDataSent(Item*,QTreeWidgetItem*)),orderManager,SLOT(showItemNameData(Item*,QTreeWidgetItem*)));
+
+//    connect(chatManager,SIGNAL(serverToChat(int,QString)),serverClientChat,SLOT(clientIdToName(int,QString)));
 }
 
 MainWindow::~MainWindow()
@@ -63,8 +68,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-
-
     chatWindow = new ChatWindow(nullptr);
     chatWindow->show();
 }

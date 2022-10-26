@@ -1,6 +1,8 @@
 #ifndef CHATWINDOW_H
 #define CHATWINDOW_H
 
+#include "chatserver.h"
+
 #include <QWidget>
 #include <QTextEdit>
 #include <QLineEdit>
@@ -21,6 +23,7 @@ public:
 private slots:
     void echoData();
     void sendData();
+    void sendProtocol(Chat_Status type, char* data, int = 1020);
 
     void on_pushButton_clicked();
 

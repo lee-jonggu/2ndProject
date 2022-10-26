@@ -46,6 +46,7 @@ void ChatWindow::echoData()
             sock->write(bytearray);
     }
     ui->textEdit->append(QString(bytearray));
+    // 여기서만 Send_Client 프로토콜만 준다면????
 }
 
 void ChatWindow::sendData()
@@ -55,7 +56,21 @@ void ChatWindow::sendData()
     {
         QByteArray bytearray;
         bytearray = str.toUtf8();
-        clientSocket->write(bytearray);
+        ui->textEdit->append("관리자 : " + str);
+
+//        sendProtocol(Chat_Talk, bytearray.data());
+        sendProtocol(Manager_Chat, bytearray.data());
     }
-    ui->textEdit->append("나 : " + str);
+}
+
+void ChatWindow::sendProtocol(Chat_Status type, char* data, int size)
+{
+    QByteArray sendArray;           // 소켓으로 보낼 데이터를 채우고
+    QDataStream out(&sendArray, QIODevice::WriteOnly);
+    out.device()->seek(0);
+    out << type;
+    out.writeRawData(data, size);
+    clientSocket->write(sendArray);     // 서버로 전송
+    clientSocket->flush();
+    while(clientSocket->waitForBytesWritten());
 }

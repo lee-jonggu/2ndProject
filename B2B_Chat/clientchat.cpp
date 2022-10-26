@@ -1,4 +1,5 @@
 #include "clientchat.h"
+#include "serverchat.h"
 #include "ui_clientchat.h"
 
 #include <QByteArray>
@@ -54,6 +55,8 @@ ClientChat::ClientChat(QWidget *parent)
 ClientChat::~ClientChat()
 {
     clientSocket->close();
+
+    delete ui;
 }
 
 void ClientChat::disconnect()
@@ -118,7 +121,7 @@ void ClientChat::receiveData()
         ui->clientIdLineEdit->setReadOnly(true);
         ui->clientNameLineEdit->setReadOnly(true);
         break;
-    case Send_Client:
+    case Send_Client: {
 //        QTreeWidgetItem *item = new QTreeWidgetItem;
 //        item->setText(0,data.data);
 //        ui->treeWidget->addTopLevelItem(item);
@@ -133,6 +136,20 @@ void ClientChat::receiveData()
             ui->treeWidget->addTopLevelItem(item);
         }
         ui->treeWidget->takeTopLevelItem(ui->treeWidget->findItems("",Qt::MatchContains).count()-1);
+    }
+        break;
+
+    case Manager_Chat:
+        foreach(QTcpSocket *sock, clientList) {
+            if (sock != clientConnection)
+                sock->write(bytearray);
+        }
+        ui->textEdit->append(QString(data.data));
+
+        break;
+
+    case Chat_One:
+        // 서버에서 보낸 프로토콜을 받아서 여기서 다시 클라이언트 서버 채팅으로 데이터 emit 하기
         break;
     }
 }
@@ -292,8 +309,15 @@ void ClientChat::goOnSend(qint64 numBytes)
 
 void ClientChat::closeEvent(QCloseEvent*)
 {
-    sendProtocol(Server_Out, name->text().toStdString().data());
-    clientSocket->disconnectFromHost();
-    if(clientSocket->state() != QAbstractSocket::UnconnectedState)
-        clientSocket->waitForDisconnected();
+//    sendProtocol(Server_Out, name->text().toStdString().data());
+//    clientSocket->disconnectFromHost();
+//    if(clientSocket->state() != QAbstractSocket::UnconnectedState)
+//        clientSocket->waitForDisconnected();
 }
+
+void ClientChat::on_serverPushButton_clicked()
+{
+    ServerChat *w = new ServerChat;
+    w->show();
+}
+

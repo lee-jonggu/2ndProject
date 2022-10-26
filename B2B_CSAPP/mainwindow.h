@@ -12,6 +12,7 @@ class ItemManager;
 class OrderManager;
 class ChatServer;
 class ChatWindow;
+class ServerClientChat;
 
 class MainWindow : public QMainWindow
 {
@@ -34,5 +35,6 @@ private:
     OrderManager *orderManager;
     ChatServer *chatManager;
     ChatWindow *chatWindow;
+    ServerClientChat *serverClientChat;
 };
 #endif // MAINWINDOW_H

@@ -10,6 +10,7 @@
 class QFile;
 class QProgressDialog;
 class LogThread;
+class ServerClientChat;
 
 namespace Ui {
 class ChatServer;
@@ -23,7 +24,9 @@ typedef enum {
     Server_Out,
     Chat_Expulsion,
     Chat_Admission,
-    Send_Client
+    Send_Client,
+    Manager_Chat,        // 서버 채팅 전송 프로토콜
+    Chat_One
 } Chat_Status;
 
 typedef struct {
@@ -39,6 +42,9 @@ public:
     explicit ChatServer(QWidget *parent = nullptr);
     ~ChatServer();
 
+signals:
+    void serverToChat(int,QString);
+
 public slots:
     void removeClient();
     void showIdName(int,QString);
@@ -51,8 +57,11 @@ public slots:
     void clientAdmission();                                // 클라이언트 초대
     void acceptConnection();                        // 파일 서버 소켓 생성
     void readClient();                              // 클라이언트에서 보낸 파일 받기
+    void interactiveChat();
 
     void sendClientList();                          // 클라이언트에 채팅창 인원 보내기
+
+    void serverToClient(int,QString);
 
 //    void sendProtocol(Chat_Status , char* , int = 1020);
 
@@ -64,6 +73,8 @@ private slots:
 
 private:
     Ui::ChatServer *ui;
+
+//    ServerClientChat *serverClientChat;
 
     LogThread* logThread;
 

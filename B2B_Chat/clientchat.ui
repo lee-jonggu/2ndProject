@@ -39,8 +39,11 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
+      <widget class="QSplitter" name="splitter">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="QWidget" name="">
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
           <spacer name="verticalSpacer">
@@ -246,9 +249,16 @@
           </spacer>
          </item>
         </layout>
-       </item>
-       <item>
+       </widget>
+       <widget class="QWidget" name="">
         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QPushButton" name="serverPushButton">
+           <property name="text">
+            <string>Server Chat</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QTreeWidget" name="treeWidget">
            <property name="maximumSize">
@@ -309,8 +319,8 @@ hr { height: 1px; border-width: 0; }
           </layout>
          </item>
         </layout>
-       </item>
-      </layout>
+       </widget>
+      </widget>
      </item>
     </layout>
    </item>

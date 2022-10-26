@@ -19,7 +19,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     order.cpp \
-    ordermanager.cpp
+    ordermanager.cpp \
+    serverclientchat.cpp
 
 HEADERS += \
     chatserver.h \
@@ -31,7 +32,8 @@ HEADERS += \
     logthread.h \
     mainwindow.h \
     order.h \
-    ordermanager.h
+    ordermanager.h \
+    serverclientchat.h
 
 FORMS += \
     chatserver.ui \
@@ -39,7 +41,8 @@ FORMS += \
     clientmanager.ui \
     itemmanager.ui \
     mainwindow.ui \
-    ordermanager.ui
+    ordermanager.ui \
+    serverclientchat.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
