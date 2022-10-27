@@ -22,52 +22,45 @@ public:
     void loadData();
 
 public slots:
-    void showClient(QTreeWidgetItem*,int);
+    void showClient(QTreeWidgetItem*,int);                  // 저장된 클라이언트 보여주기
 
-    void clientNameListData(QString);
-    void clientAddressListData(QString);
-    void clientTypeListData(QString);
-    void clientIdListData(int);
+    void clientNameListData(QString);                       // 이름으로 클라이언트 정보 추출
+    void clientAddressListData(QString);                    // 주소로 클라이언트 정보 추출
+    void clientTypeListData(QString);                       // 타입으로 클라이언트 정보 추출
+    void clientIdListData(int);                             // 클라이언트 id로 서버에 정보 전송
 
-    void clientIdNameListData(int,QTreeWidgetItem*);
+    void clientIdNameListData(int,QTreeWidgetItem*);        // 클라이언트 id, 이름으로 트리위젯아이템 형태로 저장
 
-    void serverClientList();
+    void serverClientList();                                // 서버에 접속한 클라이언트 관리
 
 signals:
-    void clientAdded(int,QString);
-    void clientRemove(int,int);
-    void clientDataSent(Client*);
-    void clientDataSent(QString);
-    void clientDataSent(int);
-    void clientNameDataSent(Client*,QTreeWidgetItem*);
+    void clientAdded(int,QString);                          // 새로운 클라이언트가 추가될 때 시그널
+    void clientRemove(int,int);                             // 클라이언트가 삭제될 때 시그널
+    void clientDataSent(Client*);                           // 클라이언트 정보 전송 시그널(클라이언트)
+    void clientDataSent(QString);                           // 클라이언트 정보 전송 시그널(이름)
+    void clientDataSent(int);                               // 클라이언트 정보 전송 시그널(id)
+    void clientNameDataSent(Client*,QTreeWidgetItem*);      // 클라이언트 이름으로 객체 전송 시그널
 
-    void clientToServer(QTreeWidgetItem*);
+    void clientToServer(QTreeWidgetItem*);                  // 서버로 클라이언트 정보 전송 시그널
 
-    void clickedServerTabSignal();
+    void clickedServerTabSignal();                          // 탭이 바뀔 때 시그널 전송
 
-private slots:
-    // QTreeWidget 슬롯
-//    void on_ClientSearchInfoTreeWidget_itemClicked(QTreeWidgetItem *item, int column);
-
-    // QAction 슬롯
-    void on_ClientInfoAddPushButton_clicked();
-    void on_ClientInfoModifyPushButton_clicked();
-    void on_ClientInfoRemovePushButton_clicked();
-
-    void on_ClientSearchPushButton_clicked();
+private slots:  
+    void on_ClientInfoAddPushButton_clicked();              // add 버튼
+    void on_ClientInfoModifyPushButton_clicked();           // modify 버튼
+    void on_ClientInfoRemovePushButton_clicked();           // remove 버튼
+    void on_ClientSearchPushButton_clicked();               // search 버튼
 
 private:
     Ui::ClientManager *ui;
 
-    int makeId();
+    int makeId();                                           // 클라이언트 id 생성
 
-    QMap<int, Client*> clientList;
-
-    QMap<int, QString> addLogList;
-    QMultiMap<int, QString> logTimeList;
-    QMenu* menu;
-
-    QMap<int, QString> serverClient;
+    QMap<int, Client*> clientList;                          // id, 클라이언트 정보
+    QMap<int, QString> addLogList;                          // id로 로그 리스트 관리
+    QMultiMap<int, QString> logTimeList;                    // id로 로그 리스트 관리
+    QMenu* menu;                                            // 메뉴
+    QMap<int, QString> serverClient;                        // id로 서버에 전송하는 클라이언트 리스트
 };
 
 #endif // CLIENTMANAGER_H
