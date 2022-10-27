@@ -25,10 +25,14 @@ private slots:
 
     void receiveData();
 
+public slots:
+    void adminFromServer(QString,QString);
+
 private:
     Ui::ServerClientChat *ui;
 
     int c_id;
+    int client_id;
     QString c_name;
 };
 
