@@ -48,7 +48,7 @@ ClientManager::~ClientManager()                                             // �
 {
     delete ui;
 
-    QFile file("clientlist.txt");                                           // 텍스트파일 이름 
+    QFile file("clientlist.txt");                                           // 텍스트파일 이름
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))                 // 읽을 파일이 없다면 리턴
         return;
 
@@ -108,7 +108,7 @@ void ClientManager::on_ClientInfoModifyPushButton_clicked()                 // m
         c->setType(type);                                                   // 새로운 타입으로 수정
         clientList[key] = c;                                                // 바뀐 정보를 가지고 클라이언트 리스트 덮어쓰기
 
-        logTimeList.insert(key,QTime::currentTime().toString());            // 바뀐 정보를 로그에 찍기 
+        logTimeList.insert(key,QTime::currentTime().toString());            // 바뀐 정보를 로그에 찍기
     }
 }
 
@@ -133,7 +133,7 @@ void ClientManager::on_ClientInfoRemovePushButton_clicked()                 // r
 }
 
 int ClientManager::makeId( )                                                // 클라이언트 id 생성
-{   
+{
     if(clientList.size( ) == 0) {                                           // 등록된 클라이언트가 없다면
         return 1000;                                                        // id 1000번 부여
     } else {                                                                // 등록된 클라이언트가 있다면

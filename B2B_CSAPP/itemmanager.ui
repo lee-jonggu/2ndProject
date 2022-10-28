@@ -433,7 +433,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Client Infomation Enrollment</string>
+               <string>Item Infomation Enrollment</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>

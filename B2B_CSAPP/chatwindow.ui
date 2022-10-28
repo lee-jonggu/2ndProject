@@ -39,21 +39,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QTreeWidget" name="treeWidget">
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>100</height>
-        </size>
-       </property>
-       <column>
-        <property name="text">
-         <string>Clinet Name</string>
-        </property>
-       </column>
-      </widget>
-     </item>
-     <item>
       <widget class="QTextEdit" name="textEdit">
        <property name="html">
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;

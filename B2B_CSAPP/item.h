@@ -7,7 +7,7 @@ class Item : public QTreeWidgetItem
 {
 public:
 
-    explicit Item(int id=0, QString="", QString="", QString="", QString="", QString="");    // id,name,categori,color,stock,price 
+    explicit Item(int id=0, QString="", QString="", QString="", QString="", QString="");    // id,name,categori,color,stock,price
 
     int id() const;                                                                         // 아이템 id
     QString getName() const;                                                                // 아이템 이름 가져오기
@@ -25,7 +25,7 @@ public:
     QString getPrice() const;                                                               // 아이템 가격 가져오기
     void setPrice(QString&);                                                                // 아이템 가격 설정
 
-    bool operator==(const Item &other) const;                                               // 아이템 간 비교 
+    bool operator==(const Item &other) const;                                               // 아이템 간 비교
 };
 
 #endif // ITEM_H

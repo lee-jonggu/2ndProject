@@ -339,3 +339,14 @@ void OrderManager::on_modifyPushButton_clicked()
     }
 }
 
+
+void OrderManager::on_RemovePushButton_clicked()
+{
+    QTreeWidgetItem* item = ui->orderTreeWidget->currentItem();
+    if(item != nullptr) {
+        orderList.remove(item->text(0).toInt());
+        ui->orderTreeWidget->takeTopLevelItem(ui->orderTreeWidget->indexOfTopLevelItem(item));
+        ui->orderTreeWidget->update();
+    }
+}
+

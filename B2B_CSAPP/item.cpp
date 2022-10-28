@@ -21,7 +21,7 @@ QString Item::getName() const
 }
 
 void Item::setName(QString& name)
-{   
+{
     setText(1, name);                           // 아이템 이름 설정
 }
 
@@ -29,7 +29,7 @@ QString Item::getCategori() const
 {
     return text(2);                             // 아이템 카테고리 가져오기
 }
-    
+
 void Item::setCategori(QString& categori)       // 아이템 설정 가져오기
 {
     setText(2, categori);
@@ -40,7 +40,7 @@ QString Item::getColor() const
     return text(3);                             // 아이템 색상 가져오기
 }
 
-void Item::setColor(QString& color) 
+void Item::setColor(QString& color)
 {
     setText(3, color);                          // 아이템 색상 설정
 }

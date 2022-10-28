@@ -13,7 +13,7 @@ ChatWindow::ChatWindow(QWidget *parent) :
 
     clientSocket = new QTcpSocket(this);                                // 새로운 소켓 생성
     clientSocket->connectToHost("127.0.0.1",8010);                      // 서버 관리자 채팅이기 때문에 로컬 호스트로 바로 연결
-    connect(clientSocket, &QAbstractSocket::errorOccurred,              
+    connect(clientSocket, &QAbstractSocket::errorOccurred,
             [=]{ qDebug() << clientSocket->errorString();});
     connect(clientSocket, SIGNAL(readyRead()),this,SLOT(echoData()));   // 데이터가 들어있는 소켓을 받으면 함수 실행
 }
@@ -55,7 +55,7 @@ void ChatWindow::sendData()                                             // 서�
     {
         QByteArray bytearray;                                           // 서버로 보낼 바이트어레이
         bytearray = str.toUtf8();                                       // 바이트어레이의 타입을 UTF-8로 설정
-        ui->textEdit->append("관리자 : " + str);                         // 채팅창에 메시지 출력 
+        ui->textEdit->append("관리자 : " + str);                         // 채팅창에 메시지 출력
         sendProtocol(Manager_Chat, bytearray.data());                   // 서버에 프로토콜 타입, 데이터 전송
     }
 }

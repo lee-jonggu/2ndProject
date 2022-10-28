@@ -45,7 +45,7 @@ signals:
 
     void clickedServerTabSignal();                          // 탭이 바뀔 때 시그널 전송
 
-private slots:  
+private slots:
     void on_ClientInfoAddPushButton_clicked();              // add 버튼
     void on_ClientInfoModifyPushButton_clicked();           // modify 버튼
     void on_ClientInfoRemovePushButton_clicked();           // remove 버튼

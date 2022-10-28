@@ -214,6 +214,7 @@ void ClientChat::on_chatPushButton_clicked()                                // C
     ui->connectPushButton->setDisabled(true);                               // 서버 들어가기 비활성화
     ui->clientIdLineEdit->setReadOnly(true);                                // 접속한 id 고정
     ui->clientNameLineEdit->setReadOnly(true);                              // 접속한 이름 고정
+    ui->textEdit->setText("<font size=4>채팅창에 입장하셨습니다.</font>");     // 채팅창에 접속하면 접속 메시지 출력
 }
 
 void ClientChat::on_chatOutPushButton_clicked()                             // Chat_Out 버튼

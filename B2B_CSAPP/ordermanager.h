@@ -49,6 +49,8 @@ private slots:
 
     void on_modifyPushButton_clicked();
 
+    void on_RemovePushButton_clicked();
+
 signals:
     void clientDataSent(QString);
     void clientDataSent(int);
