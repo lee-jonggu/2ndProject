@@ -41,7 +41,6 @@ private slots:
     void on_SearchPushButton_clicked();                     // seach 버튼
     void on_clearPushButton_clicked();                      // clear 버튼
     void on_orderTreeWidget_itemClicked(QTreeWidgetItem *item, int column);     // 주문 정보 클릭 시 입력창에 주문 정보 보여주기
-    void on_modifyPushButton_clicked();                     // modify 버튼
     void on_RemovePushButton_clicked();                     // remove 버튼
 
 signals:

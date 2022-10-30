@@ -22,7 +22,6 @@ signals:
 
 private slots:
     void on_sendPushButton_clicked();           // send 버튼
-    void receiveData();                         // 고객사 채팅으로부터 받은 데이터 처리
 
 public slots:
     void adminFromServer(QString,QString);      // 서버로부터 받은 관리자 채팅

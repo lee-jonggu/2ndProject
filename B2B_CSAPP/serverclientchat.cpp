@@ -7,8 +7,7 @@ ServerClientChat::ServerClientChat(int c_id, QString c_name, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ServerClientChat)
 {
-    qDebug() << c_id << c_name;
-    client_id = c_id;
+    client_id = c_id;                                   // 클라이언트 ID 설정
     ui->setupUi(this);
 }
 
@@ -17,43 +16,23 @@ ServerClientChat::~ServerClientChat()
     delete ui;
 }
 
-void ServerClientChat::on_sendPushButton_clicked()
+void ServerClientChat::on_sendPushButton_clicked()      // send 버튼
 {
-    QString str = ui->inputLineEdit->text();
-    if(str.length())
+    QString str = ui->inputLineEdit->text();            // 입력창에 입력한 메시지
+    if(str.length())                                    // 가 있다면
     {
-        QByteArray bytearray;
-        bytearray = str.toUtf8();
-        ui->chatTextEdit->append("관리자 : " + str);
+        QByteArray bytearray;                           // 메시지 전송을 위한 바이트 어레이
+        bytearray = str.toUtf8();                       // 바이트어레이를 UTF-8 변환
+        ui->chatTextEdit->append("관리자 : " + str);     // 채팅창에 출력
     }
-    ui->inputLineEdit->clear();
-    emit sendData(client_id,str);
+    ui->inputLineEdit->clear();                         // 입력창 초기화
+    emit sendData(client_id,str);                       // 클라이언트 ID와 메시지 넘겨주기
 }
 
-void ServerClientChat::receiveData()
+void ServerClientChat::adminFromServer(QString name,QString str)    // 서버로 부터 받은 메시지
 {
-//    QTcpSocket *clientConnection = (QTcpSocket *)sender();
-//    if (clientConnection->bytesAvailable() > BLOCK_SIZE) return;
-//    QByteArray bytearray = clientConnection->read(BLOCK_SIZE);
-
-//    chatProtocolType data;                                          // 프로토콜타입 유형
-//    memset(data.data,0,1020);
-//    QDataStream in(&bytearray, QIODevice::ReadOnly);
-//    in >> data.type;
-//    in.readRawData(data.data, 1020);
-
-//    switch(data.type){
-//    case Chat_Talk:
-////        ui->chatTextEdit->append(QString(data.data));
-//        break;
-//    }
-}
-
-void ServerClientChat::adminFromServer(QString name,QString str)
-{
-    qDebug() << name << str;
-    if(str.length())
+    if(str.length())                                                // 메시지가 있다면
     {
-        ui->chatTextEdit->append(name + " : " + str);
+        ui->chatTextEdit->append(name + " : " + str);               // 채팅창에 출력
     }
 }

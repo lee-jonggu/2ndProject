@@ -93,8 +93,8 @@ void ClientManager::on_ClientInfoAddPushButton_clicked()                    // a
 
 void ClientManager::on_ClientInfoModifyPushButton_clicked()                 // modify 버튼 클릭
 {
-    QTreeWidgetItem* item = ui->ClientInfoTreeWidget->currentItem();        // 저장되어 있는 리스트에서 수정할 아이템 클릭
-    if(item != nullptr) {                                                   // 아이템이 있다면
+    QTreeWidgetItem* item = ui->ClientInfoTreeWidget->currentItem();        // 저장되어 있는 리스트에서 수정할 클라이언트 클릭
+    if(item != nullptr) {                                                   // 클라이언트가 있다면
         int key = item->text(0).toInt();                                    // 클라이언트 id로 key 설정
         Client* c = clientList[key];                                        // 클라이언트 리스트를 클라이언트 id로 관리
         QString name, address, phoneNum, type;                              // 이름, 주소, 전화번호, 타입
@@ -172,7 +172,7 @@ void ClientManager::showClient(QTreeWidgetItem* item,int e)                 // �
     if(c != nullptr)                                                        // 가 있다면
     {
         Q_UNUSED(e);                                                        // 인덱스는 쓰지 않고
-        ui->ClientInfoTimeListWidget->clear();
+        ui->ClientInfoTimeListWidget->clear();                              // 기존 타임 리스트 삭제
 
         ui->ClientInfoInputIdLineEdit->setText(item->text(0));              // 선택된 클라이언트 아이디를 입력창에 출력
         ui->ClientInfoInputNameLineEdit->setText(item->text(1));            // 선택된 클라이언트 이름을 입력창에 출력
