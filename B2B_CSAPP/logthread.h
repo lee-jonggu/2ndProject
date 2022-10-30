@@ -13,17 +13,17 @@ public:
     explicit LogThread(QObject *parent = nullptr);
 
 private:
-    void run();
+    void run();                                             // 로그 스레드 시작
 
-    QList<QTreeWidgetItem*> itemList;
-    QString filename;
+    QList<QTreeWidgetItem*> itemList;                       // 로그 파일에 올릴 트리위젯 아이템
+    QString filename;                                       // 로그 파일 저장 경로
 
 signals:
-    void send(int data);
+    void send(int data);                                    // 정보 전송 시그널
 
 public slots:
-    void appendData(QTreeWidgetItem*);
-    void saveData();
+    void appendData(QTreeWidgetItem*);                      // itemList에 로그 올리기
+    void saveData();                                        // 로그 파일 저장
 };
 
 #endif // LOGTHREAD_H

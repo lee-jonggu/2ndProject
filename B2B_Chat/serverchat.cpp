@@ -30,7 +30,7 @@ void ServerChat::on_sendPushButton_clicked()
     {
         ui->chatTextEdit->append("나 : " + str);                // 1:1 채팅창에서 보낸 메시지 화면에 출력
     }
-
+    ui->inputLineEdit->clear();
     emit(chatToClient(client_id,str));                          // 서버로 메시지를 보내기 위한 시그널
 }
 

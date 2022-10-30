@@ -11,69 +11,70 @@ ItemManager::ItemManager(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QList<int> sizes;
-    sizes << 300 << 660;
-    ui->splitter->setSizes(sizes);
+    QList<int> sizes;                                                       // ui의 스플리터 사이즈 조절을 위한 사이즈
+    sizes << 300 << 660;                                                    // 사이즈 설정
+    ui->splitter->setSizes(sizes);                                          // ui 스플리터 사이즈 설정
 
+    /* 등록된 아이템 클릭하면 아이템 정보를 입력하는 창에 아이템 표시 */
     connect(ui->ItemTreeWidget,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this,SLOT(showItem(QTreeWidgetItem*,int)));
 
 }
 
-ItemManager::~ItemManager()
+ItemManager::~ItemManager()                                                 // 소멸자에서 데이터 저장
 {
     delete ui;
 
-    QFile file("itemlist.txt");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    QFile file("itemlist.txt");                                             // 텍스트파일 이름
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))                 // 읽을 파일이 없다면 리턴
         return;
 
-    QTextStream out(&file);
-    for (const auto& v : itemList) {
-        Item* i = v;
-        out << i->id() << ", " << i->getName() << ", ";
-        out << i->getCategori() << ", ";
-        out << i->getColor() << ", ";
-        out << i->getStock() << ", ";
-        out << i->getPrice() << "\n";
+    QTextStream out(&file);                                                 // 텍스트스트림에 담을 파일 생성
+    for (const auto& v : itemList) {                                        // 저장되어있는 아이템 리스트 돌면서
+        Item* i = v;                                                        // 아이템 형태로
+        out << i->id() << ", " << i->getName() << ", ";                     // 아이템 id, 이름
+        out << i->getCategori() << ", ";                                    // 아이템 카테고리
+        out << i->getColor() << ", ";                                       // 아이템 색상
+        out << i->getStock() << ", ";                                       // 아이템 재고량
+        out << i->getPrice() << "\n";                                       // 클라이언트 타입 저장
     }
-    file.close( );
+    file.close( );                                                          // 파일을 다 쓰고 파일 닫기
 }
 
-void ItemManager::loadData()
+void ItemManager::loadData()                                                // 미리 저장된 클라이언트 데이터를 가져온다
 {
-    QFile file("itemlist.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    QFile file("itemlist.txt");                                             // 저장되어 있는 아이템 데이터 파일명
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))                  // 파일이 있다면 읽기전용으로 열기
         return;
 
-    QTextStream in(&file);
-    while (!in.atEnd()) {
-        QString line = in.readLine();
-        QList<QString> row = line.split(", ");
-        if(row.size()) {
-            int id = row[0].toInt();
-            Item* i = new Item(id, row[1], row[2], row[3], row[4], row[5]);
-            ui->ItemTreeWidget->addTopLevelItem(i);
-            itemList.insert(id, i);
+    QTextStream in(&file);                                                  // 아이템 데이터가 담겨있는 파일을 텍스트스트림에 담기
+    while (!in.atEnd()) {                                                   // 파일의 끝까지 가면서
+        QString line = in.readLine();                                       // 한줄씩 읽는다
+        QList<QString> row = line.split(", ");                              // 쉼표(,)로 구분하면서 한줄씩 파싱
+        if(row.size()) {                                                    // 읽을 데이터가 남아있다면
+            int id = row[0].toInt();                                        // 첫번째 파싱을 클라이언트 id
+            Item* i = new Item(id, row[1], row[2], row[3], row[4], row[5]); // 나머지 데이터를 아이템 형태로 저장
+            ui->ItemTreeWidget->addTopLevelItem(i);                         // 저장된 데이터를 정보 위젯에 올린다
+            itemList.insert(id, i);                                         // 읽어온 데이터를 아이템 리스트에 추가
 
-            emit itemAdded(row[1]);
+            emit itemAdded(row[1]);                                         // 아이템이 추가될 때 시그널 발생
         }
     }
-    file.close( );
+    file.close( );                                                          // 파일을 다 읽으면 파일 닫기
 }
 
-int ItemManager::makeId( )
+int ItemManager::makeId( )                                                  // 아이템 id 생성
 {
-    if(itemList.size( ) == 0) {
-        return 880000;
-    } else {
-        auto id = itemList.lastKey();
-        return ++id;
+    if(itemList.size( ) == 0) {                                             // 등록된 클라이언트가 없다면
+        return 880000;                                                      // id 1000번 부여
+    } else {                                                                // 등록된 클라이언트가 있다면
+        auto id = itemList.lastKey();                                       // 클라이언트 리스트의 마지막 키값을 가지고
+        return ++id;                                                        // 키값을 1 추가해서 새로운 id 생성
     }
 }
 
-void ItemManager::on_AddPushButton_clicked()
+void ItemManager::on_AddPushButton_clicked()                                // add 버튼
 {
-    QString name, categori, color, stock, price;
+    QString name, categori, color, stock, price;                            // 이름, 카테고리, 색상, 재고량, 가격
     int id = makeId( );
     name = ui->InputNameLineEdit->text();
     categori = ui->InputCategoriLineEdit->text();

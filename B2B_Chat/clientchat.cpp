@@ -89,7 +89,7 @@ void ClientChat::receiveData()                                              // �
     QDataStream in(&bytearray, QIODevice::ReadOnly);                        // 받은 데이터스트림을 읽기 전용으로 열기
     in >> data.type;                                                        // 프로토콜 타입 받기
     in.readRawData(data.data, 1020);                                        // 보낸 데이터 받기
-
+    qDebug() << data.type;
     switch(data.type){                                                      // 프로토콜 타입에 따른 데이터 처리
     case Chat_Talk:                                                         // 받은 프로토콜이 Chat_Talk 이면
         foreach(QTcpSocket *sock, clientList) {                             // 서버에 접속한 클라이언트 리스트 소켓 조사
@@ -100,7 +100,7 @@ void ClientChat::receiveData()                                              // �
         break;
     case Chat_Expulsion:                                                    // 강퇴 프로토콜 타입
         QMessageBox::critical(this, tr("Chatting Client"), \
-                              tr("Exclusion from Server"));
+                              tr("Expulsion from Server"));
         ui->inputLine->setDisabled(true);                                   // 보낼 메시지 비활성화
         ui->chatOutPushButton->setDisabled(true);                           // 채팅 나가기 비활성화
         ui->chatPushButton->setDisabled(false);                             // 채팅 들어가기 활성화

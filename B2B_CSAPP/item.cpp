@@ -62,7 +62,7 @@ QString Item::getPrice() const
 
 void Item::setPrice(QString& price)
 {
-    setText(4, price);                          // 아이템 가격 설정
+    setText(5, price);                          // 아이템 가격 설정
 }
 
 bool Item::operator==(const Item& other) const

@@ -129,10 +129,10 @@ void ChatServer::receiveData()                                              // �
             items->setText(0,ip);                                   // 서버에 접속한 소켓의 ip 주소
             items->setText(1,QString::number(port));                // 서버에 접속한 소켓의 port 번호
             items->setText(2,QString::number(clientIdHash[clientConnection]));  // 서버에 접속한 소켓의 id 번호
-            items->setText(3,clientNameHash[port]);                 // 서버에 접속한 소켓의 클라이언트 이름
-            items->setText(4,"ID : " + QString::number(clientIdHash[clientConnection]) + " Name : " + clientNameHash[port]\
+            items->setText(3,clientName);                 // 서버에 접속한 소켓의 클라이언트 이름
+            items->setText(4,"ID : " + QString::number(clientIdHash[clientConnection]) + " Name : " + clientName\
                     + " Server In");                                // 서버에 접속한 소켓의 데이터를 로그에 찍기
-            items->setToolTip(4,"ID : " + QString::number(clientIdHash[clientConnection]) + " Name : " + clientNameHash[port]\
+            items->setToolTip(4,"ID : " + QString::number(clientIdHash[clientConnection]) + " Name : " + clientName\
                     + " Server In");                                // 로그 메시지가 길 경우 툴팁으로 표시
             items->setText(5,QDateTime::currentDateTime().toString());  // 로그를 찍는 시간
             ui->logTreeWidget->addTopLevelItem(items);              // 트리위젯에 로그 표시
@@ -306,6 +306,7 @@ void ChatServer::clientExpulsion()                                      // 클�
 {
     QByteArray sendArray;                                               // 보낼 데이터를 담을 바이트어레이
     QDataStream out(&sendArray, QIODevice::WriteOnly);                  // 바이트어레이를 데이터스트림에 쓰기 전용으로 담아서 열기
+    out.device()->seek(0);                                              // 바이트어레이 커서를 제일 앞 쪽으로 이동
     out << Chat_Expulsion;                                              // 프로토콜 타입 담기
     out.writeRawData("", 1020);                                         // 타입만 보내고 데이터는 보내지 않는다
 
@@ -315,6 +316,8 @@ void ChatServer::clientExpulsion()                                      // 클�
     quint16 port = sock->peerPort();                                    // 강퇴된 클라이언트의 port 번호
     QString ip = sock->peerAddress().toString();                        // 로그를 찍기 위한 클라이언트 ip
     sock->write(sendArray);                                             // 소켓을 통해 데이터 전송
+    sock->flush();                                                      // 소켓을 비우고
+    while(sock->waitForBytesWritten());                                 // 다음 연결까지 대기
     /* 클라이언트 id를 이용하여 */
     foreach(auto item, ui->enteredTreeWidget->findItems(id, Qt::MatchFixedString, 0))
     {
@@ -326,8 +329,8 @@ void ChatServer::clientExpulsion()                                      // 클�
     items->setText(1,QString::number(port));                            // 강퇴당한 클라이언트의 port 번호
     items->setText(2,id);                                               // 강퇴당한 클라이언트 id
     items->setText(3,name);                                             // 강퇴당한 클라이언트 이름
-    items->setText(4,"ID : " + id + " Name : " + name + " Exclusion from Server");      // 강퇴당한 클라이언트 정보 메시지
-    items->setToolTip(4,"ID : " + id + " Name : " + name + " Exclusion from Server");   // 메시지가 길 경우 툴팁으로 표시
+    items->setText(4,"ID : " + id + " Name : " + name + " Expulsion from Server");      // 강퇴당한 클라이언트 정보 메시지
+    items->setToolTip(4,"ID : " + id + " Name : " + name + " Expulsion from Server");   // 메시지가 길 경우 툴팁으로 표시
     items->setText(5,QDateTime::currentDateTime().toString());          // 로그를 찍는 시간
     ui->logTreeWidget->addTopLevelItem(items);                          // 로그에 추가
 
@@ -354,6 +357,7 @@ void ChatServer::clientAdmission()                                              
 {
     QByteArray sendArray;                                                               // 보낼 데이터를 담을 바이트어레이
     QDataStream out(&sendArray, QIODevice::WriteOnly);                                  // 바이트어레이를 쓰기 전용으로 열기
+    out.device()->seek(0);                                                              // 바이트어레이 커서를 제일 앞 쪽으로 이동
     out << Chat_Admission;                                                              // 프로토콜 타입 담기
     out.writeRawData("", 1020);                                                         // 타입만 보내고 데이터는 보내지 않는다
 
@@ -362,7 +366,9 @@ void ChatServer::clientAdmission()                                              
     QTcpSocket* sock = clientSocketHash[name];                                          // 클라이언트 이름을 이용해서 소켓 특정
     quint16 port = sock->peerPort();                                                    // 초대된 클라이언트의 port 번호
     QString ip = sock->peerAddress().toString();                                        // 로그를 찍기 위한 클라이언트 ip
-    sock->write(sendArray);                                                             // 소켓을 통해 데이터 전송
+    sock->write(sendArray);                                                             // 소켓을 통해 데이터
+    sock->flush();                                                                      // 소켓을 비우고
+    while(sock->waitForBytesWritten());                                                 // 다음 연결까지 대기
 
     QTreeWidgetItem *enterItem = new QTreeWidgetItem;                                   // 채팅창 클라이언트를 위한 트리위젯아이템
     enterItem->setText(0,id);                                                           // 초대된 클라이언트의 id

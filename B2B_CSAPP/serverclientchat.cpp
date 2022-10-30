@@ -26,6 +26,7 @@ void ServerClientChat::on_sendPushButton_clicked()
         bytearray = str.toUtf8();
         ui->chatTextEdit->append("관리자 : " + str);
     }
+    ui->inputLineEdit->clear();
     emit sendData(client_id,str);
 }
 

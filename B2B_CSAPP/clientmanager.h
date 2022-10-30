@@ -19,7 +19,7 @@ class ClientManager : public QWidget
 public:
     explicit ClientManager(QWidget *parent = nullptr);
     ~ClientManager();
-    void loadData();
+    void loadData();                                        // 저장된 데이터 불러오기
 
 public slots:
     void showClient(QTreeWidgetItem*,int);                  // 저장된 클라이언트 보여주기

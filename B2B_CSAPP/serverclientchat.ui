@@ -27,7 +27,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QTextEdit" name="chatTextEdit"/>
+      <widget class="QTextEdit" name="chatTextEdit">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
